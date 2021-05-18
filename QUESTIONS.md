@@ -48,30 +48,51 @@ Se requiere tiempo para el aprendizaje ya que esta arquitectura viene de otras t
 #### MVVM
 
 ##### ¿En qué consiste esta arquitectura?
-Escribe tu respuesta aquí
+El Model-View-ViewModel consiste en:
+View: Muestra la UI e informa a las otras parter de las acciones del usuario.
+ViewModel: Muestra información a la View.
+Model: Recoge información de la fuente de datos y la muestra al ViewModel.
+
+Si bien es parecido a MVP y MVC, la mayor diferencia es que ViewModel no debe contener ninguna referencia a View, ya que 
+solo muestra información. 
+También ViewModel se encarga de mostrar eventos que View pueda observar.
+
+
 
 ##### ¿Cuáles son sus ventajas?
-Escribe tu respuesta aquí
+La principal ventaja es que, como ViewModel no tiene ninguna referencia a View, su testeo se hace mucho mas sencillo.
+También al proveer de mejor separación entre las distintas partes, se evita el problema de "fat controller" (cuando el código se pone en el controller simplemente porque no tiene cabida en el Model o el View)
 
 ##### ¿Qué inconvenientes tiene?
-Escribe aquí tu respuesta
+Se pude hacer muy complicado de implementar y para aplicaciones con una UI muy simple no vale la pena.
 
 ---
 
 ### Testing
 
 #### ¿Qué tipo de tests se deberían incluir en cada parte de la pirámide de test? Pon ejemplos de librerías de testing para cada una de las partes.
-Escribe aquí tu respuesta
+Unit tests = Pequeños tests, enfocados en probar un simple componente (Librerías = JUnit, Kotest, Robolectric)
+Integration tests = Tests de tamaño mediano, sirve para comprobar como tu código interactua con otras partes del framework de Android. Se ejecutan
+una vez los Unit tests son terminados. (Librerías = Espreso, Robotium)
+UI tests = También conocidos como end-to-end tests son tests grandes, son integration y UI tests que simulan el conportamiento del usuario con la app. Son los mas lentos y costosos ya que requieren
+de un emulador o de dispositivos reales. (Librerías = UI Automator, Appium, Magneto)
+
+
 
 #### ¿Por qué los desarrolladores deben centrarse sobre todo en los Unit Tests?
-Escribe aquí tu respuesta
+Si vemos la pirámide de test, podemos ver que los Unit tests son la base de ésta piramide, y esto es porque son los tests más básicos, si estos fallan,
+el resto de tests tampoco van a funcionar.
+Los unit tests deben probar todas las clases de las que se compone tu app para poder asegurarte del correcto funcionamiento de ésta.
 
 ---
 
 ### Inyección de dependencias
 
 #### ¿En qué consiste la inyección de dependencias y por qué nos ayuda a mejorar nuestro código?
-Escribe aquí tu respuesta
+Es una forma de evitar que una clase con dependencias de otras clases, crea y use estas clases en el mismo sitio, por ello, la inyección de dependencias
+ consiste en crear estas clases necesarias en otra parte y pasarlas como parametros a la clase que las utiliza.
+ Esto ayuda a la rehusabilidad de la clase ya que las dependencias de ésta clase se generan desde otro sitio y permite que la clase sea mas versatil,
+ tambien ayuda a la hora de crear unit testing, ya que simplifica a la clase y las dependencias se pueden crear usando mock objects.
 
 #### ¿Cómo se hace para aplicar inyección de dependencias de forma manual a un proyecto (sin utilizar librerías externas)?
-Escribe aquí tu respuesta
+La forma mas sencilla es utilizar el constructor de la clase para pasarle como parámetros las dependencias que necesita.
