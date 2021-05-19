@@ -49,7 +49,7 @@ Se requiere tiempo para el aprendizaje ya que esta arquitectura viene de otras t
 
 ##### ¿En qué consiste esta arquitectura?
 El Model-View-ViewModel consiste en:
-View: Muestra la UI e informa a las otras parter de las acciones del usuario.
+View: Muestra la UI e informa a las otras partes de las acciones del usuario.
 ViewModel: Muestra información a la View.
 Model: Recoge información de la fuente de datos y la muestra al ViewModel.
 

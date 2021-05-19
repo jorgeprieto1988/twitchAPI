@@ -2,6 +2,7 @@ package edu.uoc.pac4.data.streams
 
 import edu.uoc.pac4.data.util.OAuthException.Unauthorized
 import kotlinx.coroutines.flow.Flow
+import kotlin.jvm.Throws
 
 /**
  * Created by alex on 12/09/2020.

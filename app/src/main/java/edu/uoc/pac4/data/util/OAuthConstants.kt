@@ -8,10 +8,10 @@ import java.util.*
 object OAuthConstants {
 
     // OAuth2 Variables
-    const val clientID = "12345" // TODO: Replace with your Client ID
+    const val clientID = "w6hbg15jhmi07vqxq8fo3uts93ohzl" // TODO: Replace with your Client ID
     const val redirectUri = "http://localhost" // TODO: Replace with your redirect uri
     val scopes = listOf("user:read:email user:edit")
     val uniqueState = UUID.randomUUID().toString()
-    const val clientSecret = "12345" // TODO: Replace with your Client Secret
+    const val clientSecret = "m1h0pmrc24d0rj1dpvik9azicw0e55" // TODO: Replace with your Client Secret
 
 }

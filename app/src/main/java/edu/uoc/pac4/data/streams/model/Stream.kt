@@ -1,14 +1,16 @@
 package edu.uoc.pac4.data.streams
 
+import androidx.room.Entity
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 /**
  * Created by alex on 07/09/2020.
  */
-
+@Entity(tableName = "stream_entity")
 @Serializable
 data class Stream(
+    @PrimaryKey(autoGenerate = false)
     @SerialName("id") val id: String,
     @SerialName("user_id") val userId: String? = null,
     @SerialName("user_name") val userName: String? = null,
