@@ -9,9 +9,14 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.room.Room
 import edu.uoc.pac4.R
 import edu.uoc.pac4.data.authentication.datasource.SessionManager
 import edu.uoc.pac4.data.TwitchApiService
+import edu.uoc.pac4.data.streams.TwitchStreamsRepository
+import edu.uoc.pac4.data.streams.datasource.ApplicationDatabase
+import edu.uoc.pac4.data.streams.datasource.StreamsLocal
+import edu.uoc.pac4.data.streams.datasource.StreamsRemote
 import edu.uoc.pac4.data.util.Network
 import edu.uoc.pac4.data.util.OAuthException
 import edu.uoc.pac4.ui.login.LoginActivity
@@ -72,33 +77,12 @@ class StreamsActivity : AppCompatActivity() {
         // Get Twitch Streams
         lifecycleScope.launch {
             try {
-                twitchApiService.getStreams(cursor)?.let { response ->
-                    // Success :)
-                    Log.d("StreamsActivity", "Got Streams: $response")
-
-                    val streams = response.data.orEmpty()
-                    // Update UI with Streams
-                    if (cursor != null) {
-                        // We are adding more items to the list
-                        adapter.submitList(adapter.currentList.plus(streams))
-                    } else {
-                        // It's the first n items, no pagination yet
-                        adapter.submitList(streams)
-                    }
-                    // Save cursor for next request
-                    nextCursor = response.pagination?.cursor
-
-                } ?: run {
-                    // Error :(
-
-                    // Show Error message to not leave the page empty
-                    if (adapter.currentList.isNullOrEmpty()) {
-                        Toast.makeText(
-                            this@StreamsActivity,
-                            getString(R.string.error_streams), Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }
+                val database = Room.databaseBuilder(applicationContext,
+                    ApplicationDatabase::class.java, "app_database").build()
+                val streamslocal = StreamsLocal(database.streamDao())
+                val streamsremote = StreamsRemote(Network.createHttpClient(this@StreamsActivity, "", ""))
+                val streams = TwitchStreamsRepository(streamsremote,streamslocal)
+                streams.getStreams(cursor)
                 // Hide Loading
                 swipeRefreshLayout.isRefreshing = false
 
