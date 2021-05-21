@@ -13,6 +13,7 @@ import androidx.room.Room
 import edu.uoc.pac4.R
 import edu.uoc.pac4.data.authentication.datasource.SessionManager
 import edu.uoc.pac4.data.TwitchApiService
+import edu.uoc.pac4.data.streams.Stream
 import edu.uoc.pac4.data.streams.TwitchStreamsRepository
 import edu.uoc.pac4.data.streams.datasource.ApplicationDatabase
 import edu.uoc.pac4.data.streams.datasource.StreamsLocal
@@ -23,6 +24,8 @@ import edu.uoc.pac4.ui.login.LoginActivity
 import edu.uoc.pac4.ui.profile.ProfileActivity
 import kotlinx.android.synthetic.main.activity_streams.*
 import kotlinx.coroutines.launch
+
+
 
 class StreamsActivity : AppCompatActivity() {
 
@@ -82,7 +85,23 @@ class StreamsActivity : AppCompatActivity() {
                 val streamslocal = StreamsLocal(database.streamDao())
                 val streamsremote = StreamsRemote(Network.createHttpClient(this@StreamsActivity, "", ""))
                 val streams = TwitchStreamsRepository(streamsremote,streamslocal)
-                streams.getStreams(cursor)
+                val listStreams = streams.getStreams(cursor)
+                Log.w(TAG, "streams are "+ listStreams.toString())
+                init {
+                    viewModelScope.launch {
+                        // Trigger the flow and consume its elements using collect
+                        newsRepository.favoriteLatestNews.collect { favoriteNews ->
+                            // Update View with the latest favorite news
+                        }
+                    }
+                }
+                if (cursor != null) {
+                    // We are adding more items to the list
+                    adapter.submitList(adapter.currentList.plus(listStreams.collect(List<Stream>)))
+                } else {
+                    // It's the first n items, no pagination yet
+                    adapter.submitList(listStreams)
+                }
                 // Hide Loading
                 swipeRefreshLayout.isRefreshing = false
 

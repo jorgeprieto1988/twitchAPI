@@ -1,5 +1,6 @@
 package edu.uoc.pac4.data.streams
 
+import android.util.Log
 import edu.uoc.pac4.data.authentication.datasource.SessionManager
 import edu.uoc.pac4.data.streams.datasource.StreamsLocal
 import edu.uoc.pac4.data.streams.datasource.StreamsRemote
@@ -17,15 +18,20 @@ class TwitchStreamsRepository(
 ) : StreamsRepository {
 
     override suspend fun getStreams(cursor: String?): Flow<Pair<String?, List<Stream>>> {
-        val streamsFlow: Flow<List<Stream>> = flow {
-            val listStream: MutableList<Stream> = streamsLocal.getStreamsLocal().toMutableList()
-            emit(listStream)
+        return flow {
+            var listStream: List<Stream> = streamsLocal.getStreamsLocal()
+            Log.w("Streams", "List of liststream is " + listStream.toString())
+            var pair : Pair<String?, List<Stream>> = Pair("pair",listStream)
+            emit(pair)
             val streams = streamsRemote.getStreamsTwitch(cursor)
             streams?.data?.let { streamsLocal.saveStreams(it) }
             listStream += streamsLocal.getStreamsLocal()
-            emit(listStream)
+            Log.w("Streams", "List of liststream is $listStream")
+            pair = Pair("pair",listStream)
+            emit(pair)
         }
-        TODO("Not yet implemented")
+
+
     }
 
 }
