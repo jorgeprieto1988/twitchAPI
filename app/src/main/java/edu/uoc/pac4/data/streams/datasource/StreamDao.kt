@@ -9,7 +9,7 @@ import edu.uoc.pac4.data.streams.Stream
 @Dao
 interface StreamDao {
     @Query("SELECT * FROM stream_entity")
-    fun getAllStreams(): List<Stream>
+    suspend fun getAllStreams(): List<Stream>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveStream(stream: Stream): Long

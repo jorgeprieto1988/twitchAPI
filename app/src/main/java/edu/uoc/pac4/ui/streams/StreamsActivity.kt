@@ -23,8 +23,9 @@ import edu.uoc.pac4.data.util.OAuthException
 import edu.uoc.pac4.ui.login.LoginActivity
 import edu.uoc.pac4.ui.profile.ProfileActivity
 import kotlinx.android.synthetic.main.activity_streams.*
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-
+import org.koin.core.KoinApplication.Companion.init
 
 
 class StreamsActivity : AppCompatActivity() {
@@ -87,20 +88,15 @@ class StreamsActivity : AppCompatActivity() {
                 val streams = TwitchStreamsRepository(streamsremote,streamslocal)
                 val listStreams = streams.getStreams(cursor)
                 Log.w(TAG, "streams are "+ listStreams.toString())
-                init {
-                    viewModelScope.launch {
-                        // Trigger the flow and consume its elements using collect
-                        newsRepository.favoriteLatestNews.collect { favoriteNews ->
-                            // Update View with the latest favorite news
-                        }
+
+                listStreams.collect(){collectedStreams ->
+                    if (cursor != null) {
+                    adapter.submitList(adapter.currentList.plus(collectedStreams.second))
+                    } else {
+                        Log.w(TAG, "first streams "+ collectedStreams.second.toString())
+                        // It's the first n items, no pagination yet
+                        adapter.submitList(collectedStreams.second)
                     }
-                }
-                if (cursor != null) {
-                    // We are adding more items to the list
-                    adapter.submitList(adapter.currentList.plus(listStreams.collect(List<Stream>)))
-                } else {
-                    // It's the first n items, no pagination yet
-                    adapter.submitList(listStreams)
                 }
                 // Hide Loading
                 swipeRefreshLayout.isRefreshing = false

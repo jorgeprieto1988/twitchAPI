@@ -4,7 +4,7 @@ import edu.uoc.pac4.data.streams.Stream
 
 class StreamsLocal(private val streamDao: StreamDao) {
 
-    fun getStreamsLocal(): List<Stream> {
+    suspend fun getStreamsLocal(): List<Stream> {
         return streamDao.getAllStreams()
     }
 

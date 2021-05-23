@@ -1,7 +1,7 @@
 package edu.uoc.pac4.data.streams
 
 import android.util.Log
-import edu.uoc.pac4.data.authentication.datasource.SessionManager
+
 import edu.uoc.pac4.data.streams.datasource.StreamsLocal
 import edu.uoc.pac4.data.streams.datasource.StreamsRemote
 import kotlinx.coroutines.flow.Flow
