@@ -8,11 +8,11 @@ class StreamsLocal(private val streamDao: StreamDao) {
         return streamDao.getAllStreams()
     }
 
-    fun saveStream(stream: Stream) {
+    suspend fun saveStream(stream: Stream) {
         streamDao.saveStream(stream)
     }
 
-    fun saveStreams(streams: List<Stream>) {
+    suspend fun saveStreams(streams: List<Stream>) {
         streams.forEach { saveStream(it) }
     }
 

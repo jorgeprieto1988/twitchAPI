@@ -10,6 +10,7 @@ class StreamsRemote(private val httpClient: HttpClient) {
 
     /// Gets Streams on Twitch
     suspend fun getStreamsTwitch(cursor: String? = null): StreamsResponse? {
+        Log.w("Remote", "getting streams remote")
         // TODO("Get Streams from Twitch")
         val response : StreamsResponse
         try{
@@ -21,10 +22,12 @@ class StreamsRemote(private val httpClient: HttpClient) {
             }
 
             Log.v("Streams", "Data: ${response.data}")
+            Log.w("Remote", "Data: ${response.data}")
             return response
         }
         catch(e: Exception){
             Log.v("Exception", "Getting exception! ${e.toString()}")
+            Log.w("Remote", "Getting exception! ${e.toString()}")
 
 
         }

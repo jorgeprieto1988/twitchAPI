@@ -12,5 +12,5 @@ interface StreamDao {
     suspend fun getAllStreams(): List<Stream>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun saveStream(stream: Stream): Long
+    suspend fun saveStream(stream: Stream): Long
 }

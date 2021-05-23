@@ -27,7 +27,7 @@ class OAuthAuthenticationRepository(
         sessionManager.saveAccessToken(tokensResponse.accessToken)
         tokensResponse.refreshToken?.let {
             sessionManager.saveRefreshToken(it)
-        } ?: Log.w(TAG, "Refresh token after login")
+        } ?: Log.w("Token", "Refresh token after login")
     }
 
     override suspend fun logout() {

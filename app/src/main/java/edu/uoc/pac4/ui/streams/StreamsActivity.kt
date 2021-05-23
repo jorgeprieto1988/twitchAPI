@@ -19,6 +19,7 @@ import edu.uoc.pac4.data.streams.datasource.ApplicationDatabase
 import edu.uoc.pac4.data.streams.datasource.StreamsLocal
 import edu.uoc.pac4.data.streams.datasource.StreamsRemote
 import edu.uoc.pac4.data.util.Network
+import edu.uoc.pac4.data.util.OAuthConstants
 import edu.uoc.pac4.data.util.OAuthException
 import edu.uoc.pac4.ui.login.LoginActivity
 import edu.uoc.pac4.ui.profile.ProfileActivity
@@ -84,7 +85,7 @@ class StreamsActivity : AppCompatActivity() {
                 val database = Room.databaseBuilder(applicationContext,
                     ApplicationDatabase::class.java, "app_database").build()
                 val streamslocal = StreamsLocal(database.streamDao())
-                val streamsremote = StreamsRemote(Network.createHttpClient(this@StreamsActivity, "", ""))
+                val streamsremote = StreamsRemote(Network.createHttpClient(this@StreamsActivity, OAuthConstants.clientID, OAuthConstants.clientSecret))
                 val streams = TwitchStreamsRepository(streamsremote,streamslocal)
                 val listStreams = streams.getStreams(cursor)
                 Log.w(TAG, "streams are "+ listStreams.toString())

@@ -1,5 +1,6 @@
 package edu.uoc.pac4.data.authentication.datasource
 
+import android.util.Log
 import edu.uoc.pac4.data.util.Endpoints
 import edu.uoc.pac4.data.util.OAuthConstants
 import edu.uoc.pac4.data.authentication.model.OAuthTokensResponse
@@ -24,6 +25,8 @@ class TwitchAuthenticationService(
             parameter("grant_type", "authorization_code")
             parameter("redirect_uri", OAuthConstants.redirectUri)
         }
+
+        Log.w("Token", "Getting tokens Access:" +  response.accessToken + " and Refresh: " + response.refreshToken)
         return response
     }
 }
