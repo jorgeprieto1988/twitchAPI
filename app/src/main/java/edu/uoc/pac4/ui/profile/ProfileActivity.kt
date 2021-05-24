@@ -17,7 +17,10 @@ import edu.uoc.pac4.data.util.Network
 import edu.uoc.pac4.ui.login.LoginActivity
 import edu.uoc.pac4.data.authentication.datasource.SessionManager
 import edu.uoc.pac4.data.TwitchApiService
+import edu.uoc.pac4.data.user.TwitchUserRepository
 import edu.uoc.pac4.data.user.User
+import edu.uoc.pac4.data.user.datasource.UserDataSource
+import edu.uoc.pac4.data.util.OAuthConstants
 import edu.uoc.pac4.data.util.OAuthException
 import kotlinx.android.synthetic.main.activity_profile.*
 import kotlinx.coroutines.launch
@@ -56,14 +59,15 @@ class ProfileActivity : AppCompatActivity() {
         progressBar.visibility = VISIBLE
         // Retrieve the Twitch User Profile using the API
         try {
-            twitchApiService.getUser()?.let { user ->
-                // Success :)
-                // Update the UI with the user data
-                setUserInfo(user)
-            } ?: run {
-                // Error :(
-                showError(getString(R.string.error_profile))
+            val userDataSource = UserDataSource(Network.createHttpClient(this@ProfileActivity, OAuthConstants.clientID, OAuthConstants.clientSecret))
+            val userService = TwitchUserRepository(userDataSource)
+            try {
+                userService.getUser()?.let { setUserInfo(it) }
             }
+            catch(e :Error){
+                showError(getString(edu.uoc.pac4.R.string.error_profile))
+            }
+
             // Hide Loading
             progressBar.visibility = GONE
         } catch (t: OAuthException.Unauthorized) {
@@ -76,13 +80,13 @@ class ProfileActivity : AppCompatActivity() {
         progressBar.visibility = VISIBLE
         // Update the Twitch User Description using the API
         try {
-            twitchApiService.updateUserDescription(description)?.let { user ->
-                // Success :)
-                // Update the UI with the user data
-                setUserInfo(user)
-            } ?: run {
-                // Error :(
-                showError(getString(R.string.error_profile))
+            val userDataSource = UserDataSource(Network.createHttpClient(this@ProfileActivity, OAuthConstants.clientID, OAuthConstants.clientSecret))
+            val userService = TwitchUserRepository(userDataSource)
+            try {
+                userService.updateUser(description)?.let { setUserInfo(it) }
+            }
+            catch(e :Error){
+                showError(getString(edu.uoc.pac4.R.string.error_profile))
             }
             // Hide Loading
             progressBar.visibility = GONE
