@@ -1,6 +1,7 @@
 package edu.uoc.pac4.ui.di
 
 import edu.uoc.pac4.ui.LaunchViewModel
+import edu.uoc.pac4.ui.profile.ProfileViewModel
 import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -13,4 +14,5 @@ val uiModule = module {
 
     // LaunchViewModel
      viewModel { LaunchViewModel(repository = get()) }
+    viewModel { ProfileViewModel(repository = get()) }
 }

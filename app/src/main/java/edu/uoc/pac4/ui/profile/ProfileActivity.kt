@@ -9,6 +9,8 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
@@ -16,27 +18,32 @@ import edu.uoc.pac4.R
 import edu.uoc.pac4.data.util.Network
 import edu.uoc.pac4.ui.login.LoginActivity
 import edu.uoc.pac4.data.authentication.datasource.SessionManager
-import edu.uoc.pac4.data.TwitchApiService
 import edu.uoc.pac4.data.user.TwitchUserRepository
 import edu.uoc.pac4.data.user.User
 import edu.uoc.pac4.data.user.datasource.UserDataSource
 import edu.uoc.pac4.data.util.OAuthConstants
 import edu.uoc.pac4.data.util.OAuthException
+import edu.uoc.pac4.ui.LaunchViewModel
 import kotlinx.android.synthetic.main.activity_profile.*
 import kotlinx.coroutines.launch
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class ProfileActivity : AppCompatActivity() {
+    private val viewModel  by viewModel<ProfileViewModel>()
 
     private val TAG = "ProfileActivity"
 
-    private val twitchApiService = TwitchApiService(Network.createHttpClient(this, "", ""))
+    //private val twitchApiService = TwitchApiService(Network.createHttpClient(this, "", ""))
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
+        //viewModel = ViewModelProviders.of(this).get(ProfileViewModel::class.java)
         // Get User Profile
         lifecycleScope.launch {
+
             getUserProfile()
+            //initObservers()
         }
         // Update Description Button Listener
         updateDescriptionButton.setOnClickListener {
@@ -55,14 +62,26 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
-    private suspend fun getUserProfile() {
+    private fun initObservers() {
+        // Observe `isUserAvailable` LiveData
+       // viewModel.user.observe(this) {
+            // Call a method when a new value is emitted
+          //  getUserProfile(it)
+        //}
+    }
+
+    private  fun getUserProfile() {
         progressBar.visibility = VISIBLE
         // Retrieve the Twitch User Profile using the API
         try {
-            val userDataSource = UserDataSource(Network.createHttpClient(this@ProfileActivity, OAuthConstants.clientID, OAuthConstants.clientSecret))
-            val userService = TwitchUserRepository(userDataSource)
+            //val userDataSource = UserDataSource(Network.createHttpClient(this@ProfileActivity, OAuthConstants.clientID, OAuthConstants.clientSecret))
+            //val userService = TwitchUserRepository(userDataSource)
+            viewModel.getSavedUser().observe(this, Observer { user ->
+                user?.let { setUserInfo(it) }
+            })
             try {
-                userService.getUser()?.let { setUserInfo(it) }
+                //userService.getUser()?.let { setUserInfo(it) }
+                //setUserInfo(user)
             }
             catch(e :Error){
                 showError(getString(edu.uoc.pac4.R.string.error_profile))
