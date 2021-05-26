@@ -43,7 +43,6 @@ class ProfileActivity : AppCompatActivity() {
         lifecycleScope.launch {
 
             getUserProfile()
-            //initObservers()
         }
         // Update Description Button Listener
         updateDescriptionButton.setOnClickListener {
@@ -51,9 +50,13 @@ class ProfileActivity : AppCompatActivity() {
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             imm?.hideSoftInputFromWindow(it.windowToken, 0)
             // Update User Description
-            lifecycleScope.launch {
-                updateUserDescription(userDescriptionEditText.text?.toString() ?: "")
-            }
+            //lifecycleScope.launch {
+                viewModel.getSavedUser().observe(this, Observer {
+                    lifecycleScope.launch {
+                    updateUserDescription(userDescriptionEditText.text?.toString() ?: "")}
+                })
+               // updateUserDescription(userDescriptionEditText.text?.toString() ?: "")
+           // }
         }
         // Logout Button Listener
         logoutButton.setOnClickListener {
@@ -62,30 +65,13 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
-    private fun initObservers() {
-        // Observe `isUserAvailable` LiveData
-       // viewModel.user.observe(this) {
-            // Call a method when a new value is emitted
-          //  getUserProfile(it)
-        //}
-    }
-
     private  fun getUserProfile() {
         progressBar.visibility = VISIBLE
         // Retrieve the Twitch User Profile using the API
         try {
-            //val userDataSource = UserDataSource(Network.createHttpClient(this@ProfileActivity, OAuthConstants.clientID, OAuthConstants.clientSecret))
-            //val userService = TwitchUserRepository(userDataSource)
             viewModel.getSavedUser().observe(this, Observer { user ->
                 user?.let { setUserInfo(it) }
             })
-            try {
-                //userService.getUser()?.let { setUserInfo(it) }
-                //setUserInfo(user)
-            }
-            catch(e :Error){
-                showError(getString(edu.uoc.pac4.R.string.error_profile))
-            }
 
             // Hide Loading
             progressBar.visibility = GONE

@@ -18,7 +18,9 @@ class ProfileViewModel(
 
     init{
         getUserTwitch()
-        //updateUserTwitch("")
+        viewModelScope.launch {
+            repository.getUser()?.description?.let { updateUserTwitch(it) }
+        }
     }
 
     fun getSavedUser() = user
