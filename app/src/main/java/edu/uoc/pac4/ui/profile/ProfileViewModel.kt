@@ -18,9 +18,9 @@ class ProfileViewModel(
 
     init{
         getUserTwitch()
-        viewModelScope.launch {
-            repository.getUser()?.description?.let { updateUserTwitch(it) }
-        }
+        //viewModelScope.launch {
+        //    repository.getUser()?.description?.let { updateUserTwitch(it) }
+       // }
     }
 
     fun getSavedUser() = user
@@ -32,7 +32,7 @@ class ProfileViewModel(
         }
     }
 
-    private fun updateUserTwitch(description: String){
+    fun updateUserTwitch(description: String){
         viewModelScope.launch{
             user.postValue(repository.updateUser(description))
         }

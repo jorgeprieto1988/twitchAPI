@@ -38,7 +38,6 @@ class ProfileActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
-        //viewModel = ViewModelProviders.of(this).get(ProfileViewModel::class.java)
         // Get User Profile
         lifecycleScope.launch {
 
@@ -85,14 +84,7 @@ class ProfileActivity : AppCompatActivity() {
         progressBar.visibility = VISIBLE
         // Update the Twitch User Description using the API
         try {
-            val userDataSource = UserDataSource(Network.createHttpClient(this@ProfileActivity, OAuthConstants.clientID, OAuthConstants.clientSecret))
-            val userService = TwitchUserRepository(userDataSource)
-            try {
-                userService.updateUser(description)?.let { setUserInfo(it) }
-            }
-            catch(e :Error){
-                showError(getString(edu.uoc.pac4.R.string.error_profile))
-            }
+            viewModel.updateUserTwitch(description)
             // Hide Loading
             progressBar.visibility = GONE
         } catch (t: OAuthException.Unauthorized) {

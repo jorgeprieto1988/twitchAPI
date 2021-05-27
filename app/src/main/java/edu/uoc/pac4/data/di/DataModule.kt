@@ -6,6 +6,11 @@ import edu.uoc.pac4.data.util.OAuthConstants
 import edu.uoc.pac4.data.authentication.datasource.TwitchAuthenticationService
 import edu.uoc.pac4.data.authentication.repository.AuthenticationRepository
 import edu.uoc.pac4.data.authentication.repository.OAuthAuthenticationRepository
+import edu.uoc.pac4.data.streams.StreamsRepository
+import edu.uoc.pac4.data.streams.TwitchStreamsRepository
+import edu.uoc.pac4.data.streams.datasource.StreamDao
+import edu.uoc.pac4.data.streams.datasource.StreamsLocal
+import edu.uoc.pac4.data.streams.datasource.StreamsRemote
 import edu.uoc.pac4.data.user.TwitchUserRepository
 import edu.uoc.pac4.data.user.UserRepository
 import edu.uoc.pac4.data.user.datasource.UserDataSource
@@ -30,10 +35,16 @@ val dataModule = module {
         )
     }
 
+    single<StreamDao> {
+
+    }
+
     // Data Sources
     single<SessionManager> { SessionManager(androidContext()) }
     single<TwitchAuthenticationService> { TwitchAuthenticationService(httpClient = get()) }
     single<UserDataSource> { UserDataSource(httpClient = get()) }
+    single<StreamsRemote> { StreamsRemote(httpClient = get()) }
+    single<StreamsLocal> { StreamsLocal(streamDao = get()) }
 
     // Repositories
     single<AuthenticationRepository> {
@@ -46,6 +57,13 @@ val dataModule = module {
     single<UserRepository> {
         TwitchUserRepository(
                 userDataSource = get()
+        )
+    }
+
+    single<StreamsRepository> {
+        TwitchStreamsRepository(
+                streamsRemote = get(),
+                streamsLocal = get()
         )
     }
 }
