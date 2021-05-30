@@ -1,6 +1,7 @@
 package edu.uoc.pac4.data.di
 
 import androidx.room.Dao
+import androidx.room.Room
 import androidx.room.RoomDatabase
 import edu.uoc.pac4.data.authentication.datasource.SessionManager
 import edu.uoc.pac4.data.util.Network
@@ -36,15 +37,17 @@ val dataModule = module {
         )
     }
 
+    single< StreamDao> {
+        Room.databaseBuilder(androidContext(),
+                ApplicationDatabase::class.java, "app_database").build().streamDao()
+    }
+
     // Data Sources
     single<SessionManager> { SessionManager(androidContext()) }
     single<TwitchAuthenticationService> { TwitchAuthenticationService(httpClient = get()) }
     single<UserDataSource> { UserDataSource(httpClient = get()) }
     single<StreamsRemote> { StreamsRemote(httpClient = get()) }
-    fun provideDao(database: ApplicationDatabase): StreamDao {
-        return database.streamDao()
-    }
-    single { provideDao(get()) }
+
     single<StreamsLocal> { StreamsLocal(streamDao = get()) }
 
     // Repositories
