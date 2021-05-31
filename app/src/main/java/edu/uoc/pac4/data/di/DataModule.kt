@@ -47,7 +47,6 @@ val dataModule = module {
     single<TwitchAuthenticationService> { TwitchAuthenticationService(httpClient = get()) }
     single<UserDataSource> { UserDataSource(httpClient = get()) }
     single<StreamsRemote> { StreamsRemote(httpClient = get()) }
-
     single<StreamsLocal> { StreamsLocal(streamDao = get()) }
 
     // Repositories

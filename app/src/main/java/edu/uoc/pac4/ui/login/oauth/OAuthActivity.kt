@@ -21,16 +21,19 @@ import edu.uoc.pac4.data.authentication.repository.OAuthAuthenticationRepository
 import edu.uoc.pac4.data.util.Endpoints
 import edu.uoc.pac4.data.util.Network
 import edu.uoc.pac4.data.util.OAuthConstants
+import edu.uoc.pac4.ui.profile.ProfileViewModel
 import kotlinx.android.synthetic.main.activity_oauth.*
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class OAuthActivity : AppCompatActivity() {
 
     private val TAG = "StreamsActivity"
 
     // Temporary repository before creating the OAuthViewModel
-    val repository: AuthenticationRepository by inject()
+    //val repository: AuthenticationRepository by inject()
+    private val viewModel  by viewModel<OAuthViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -105,12 +108,13 @@ class OAuthActivity : AppCompatActivity() {
         // Launch new thread attached to this Activity.
         // If the Activity is closed, this Thread will be cancelled
         lifecycleScope.launch {
-            val sessionManager = SessionManager(this@OAuthActivity)
-            val twitchauth = TwitchAuthenticationService(Network.createHttpClient(this@OAuthActivity, "", ""))
-            val auth = OAuthAuthenticationRepository(sessionManager, twitchauth)
+            //val sessionManager = SessionManager(this@OAuthActivity)
+            //val twitchauth = TwitchAuthenticationService(Network.createHttpClient(this@OAuthActivity, "", ""))
+            //val auth = OAuthAuthenticationRepository(sessionManager, twitchauth)
 
             try {
-                auth.login(authorizationCode)
+                viewModel.login(authorizationCode)
+                //auth.login(authorizationCode)
                 // Hide Loading Indicator
                 progressBar.visibility = View.GONE
 
