@@ -10,7 +10,8 @@ import edu.uoc.pac4.data.user.UserRepository
 import kotlinx.coroutines.launch
 
 class ProfileViewModel(
-        private val repository: UserRepository
+        private val user_repository: UserRepository,
+        private val auth_repository: AuthenticationRepository
 ) : ViewModel() {
 
     // Live Data
@@ -28,13 +29,19 @@ class ProfileViewModel(
     private fun getUserTwitch(){
 
         viewModelScope.launch{
-            user.postValue(repository.getUser())
+            user.postValue(user_repository.getUser())
         }
     }
 
     fun updateUserTwitch(description: String){
         viewModelScope.launch{
-            user.postValue(repository.updateUser(description))
+            user.postValue(user_repository.updateUser(description))
+        }
+    }
+
+    fun userLogOut(){
+        viewModelScope.launch {
+            auth_repository.logout()
         }
     }
 

@@ -60,7 +60,8 @@ class ProfileActivity : AppCompatActivity() {
         // Logout Button Listener
         logoutButton.setOnClickListener {
             // Logout
-            logout()
+            viewModel.userLogOut()
+            //logout()
         }
     }
 
