@@ -11,6 +11,7 @@ import edu.uoc.pac4.data.user.UsersResponse
 import io.ktor.client.*
 import io.ktor.client.features.*
 import io.ktor.client.request.*
+import kotlin.jvm.Throws
 
 /**
  * Created by alex on 24/10/2020.

@@ -60,8 +60,8 @@ class ProfileActivity : AppCompatActivity() {
         // Logout Button Listener
         logoutButton.setOnClickListener {
             // Logout
-            viewModel.userLogOut()
-            //logout()
+
+            logout()
         }
     }
 
@@ -110,9 +110,7 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun logout() {
-        // Clear local session data
-        SessionManager(this).clearAccessToken()
-        SessionManager(this).clearRefreshToken()
+        viewModel.userLogOut()
         // Close this and all parent activities
         finishAffinity()
         // Open Login

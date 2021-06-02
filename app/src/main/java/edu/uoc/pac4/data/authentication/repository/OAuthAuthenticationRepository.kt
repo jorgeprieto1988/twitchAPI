@@ -24,10 +24,14 @@ class OAuthAuthenticationRepository(
         // Authenticate using *TwitchAuthenticationService*
         val tokensResponse = twitchAuthenticationService.getTokens(authorizationCode)
         // Save tokens using *SessionManager*
-        sessionManager.saveAccessToken(tokensResponse.accessToken)
-        tokensResponse.refreshToken?.let {
-            sessionManager.saveRefreshToken(it)
-        } ?: Log.w("Token", "Refresh token after login")
+        if (tokensResponse != null) {
+            sessionManager.saveAccessToken(tokensResponse.accessToken)
+        }
+        if (tokensResponse != null) {
+            tokensResponse.refreshToken?.let {
+                sessionManager.saveRefreshToken(it)
+            } ?: Log.w("Token", "Refresh token after login")
+        }
     }
 
     override suspend fun logout() {
