@@ -15,4 +15,7 @@ interface AuthenticationRepository {
     /// Log out the current user
     suspend fun logout()
 
+    /// Log out the current user
+    suspend fun isLoginSuccess(): Boolean
+
 }

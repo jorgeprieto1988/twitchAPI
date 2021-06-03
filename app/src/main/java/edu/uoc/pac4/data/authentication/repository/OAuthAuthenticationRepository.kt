@@ -24,19 +24,22 @@ class OAuthAuthenticationRepository(
         // Authenticate using *TwitchAuthenticationService*
         val tokensResponse = twitchAuthenticationService.getTokens(authorizationCode)
         // Save tokens using *SessionManager*
-        if (tokensResponse != null) {
-            sessionManager.saveAccessToken(tokensResponse.accessToken)
-        }
-        if (tokensResponse != null) {
-            tokensResponse.refreshToken?.let {
-                sessionManager.saveRefreshToken(it)
-            } ?: Log.w("Token", "Refresh token after login")
-        }
+        Log.w("TAG", "saving tokens")
+        sessionManager.saveAccessToken(tokensResponse.accessToken)
+        Log.w("TAG", "tokens are " + sessionManager.getAccessToken())
+        tokensResponse.refreshToken?.let {
+            sessionManager.saveRefreshToken(it)
+        } ?: Log.w("TAG", "Refresh token after login")
     }
 
     override suspend fun logout() {
         // Clear local tokens
         sessionManager.clearAccessToken()
         sessionManager.clearRefreshToken()
+    }
+
+    override suspend fun isLoginSuccess(): Boolean {
+        // Check user is available locally
+        return (sessionManager.getAccessToken() != null && sessionManager.getRefreshToken() != null)
     }
 }

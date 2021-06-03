@@ -21,7 +21,9 @@ import edu.uoc.pac4.data.authentication.repository.OAuthAuthenticationRepository
 import edu.uoc.pac4.data.util.Endpoints
 import edu.uoc.pac4.data.util.Network
 import edu.uoc.pac4.data.util.OAuthConstants
+import edu.uoc.pac4.ui.login.LoginActivity
 import edu.uoc.pac4.ui.profile.ProfileViewModel
+import edu.uoc.pac4.ui.streams.StreamsActivity
 import kotlinx.android.synthetic.main.activity_oauth.*
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
@@ -29,7 +31,7 @@ import org.koin.android.viewmodel.ext.android.viewModel
 
 class OAuthActivity : AppCompatActivity() {
 
-    private val TAG = "StreamsActivity"
+    private val TAG = "OauthActivity"
 
     // Temporary repository before creating the OAuthViewModel
     //val repository: AuthenticationRepository by inject()
@@ -38,8 +40,32 @@ class OAuthActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_oauth)
+        initObservers()
         launchOAuthAuthorization()
     }
+
+    private fun initObservers() {
+        // Observe `isUserAvailable` LiveData
+        viewModel.isLoginSuccess.observe(this) {
+            // Call a method when a new value is emitted
+            onLoginSuccess(it)
+        }
+    }
+
+    private fun onLoginSuccess(isLoginSuccess: Boolean) {
+        if (isLoginSuccess) {
+            Log.v("Token", "Login ok")
+            // User is available, open Streams Activity
+            progressBar.visibility = View.GONE
+            startActivity(Intent(this@OAuthActivity, LaunchActivity::class.java))
+        } else {
+            Log.v("Token", "Login failed")
+            // User not available, request Login
+            startActivity(Intent(this@OAuthActivity, OAuthActivity::class.java))
+        }
+        finish()
+    }
+
 
     fun buildOAuthUri(): Uri {
         return Uri.parse(Endpoints.authorizationUrl)
@@ -106,25 +132,30 @@ class OAuthActivity : AppCompatActivity() {
         lifecycleScope.launch {
 
             try {
+                Log.w(TAG, "entering logins")
                 viewModel.login(authorizationCode)
+                Log.w(TAG, "out of  logins")
                 // Hide Loading Indicator
-                progressBar.visibility = View.GONE
-
+               // progressBar.visibility = View.GONE
+                //Log.w(TAG, "starting activity launch")
                 // Restart app to navigate to StreamsActivity
-                startActivity(Intent(this@OAuthActivity, LaunchActivity::class.java))
-                finish()
+                //startActivity(Intent(this@OAuthActivity, LaunchActivity::class.java))
+                //finish()
             }
             catch(e :Error){
+                Log.w(TAG, "catching errors")
                 Toast.makeText(
                     this@OAuthActivity,
                     getString(R.string.error_oauth),
                     Toast.LENGTH_LONG
                 ).show()
                 // Restart Activity
-                finish()
-                startActivity(Intent(this@OAuthActivity, OAuthActivity::class.java))
+                //finish()
+                //startActivity(Intent(this@OAuthActivity, OAuthActivity::class.java))
             }
        
         }
+
+
     }
 }

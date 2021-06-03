@@ -12,7 +12,7 @@ class SessionManager(context: Context) {
     private val sharedPreferences =
         context.getSharedPreferences(sharedPreferencesName, Context.MODE_PRIVATE)
 
-    private val accessTokenKey = "accessTokeKey"
+    private val accessTokenKey = "accessTokenKey"
     private val refreshTokenKey = "refreshTokenKey"
 
     fun isUserAvailable(): Boolean {

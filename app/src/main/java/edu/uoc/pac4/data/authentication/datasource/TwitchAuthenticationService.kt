@@ -16,9 +16,10 @@ class TwitchAuthenticationService(
     private val TAG = "TwitchAuthenticationSer"
 
     /// Gets Access and Refresh Tokens on Twitch
-    suspend fun getTokens(authorizationCode: String): OAuthTokensResponse? {
+    suspend fun getTokens(authorizationCode: String): OAuthTokensResponse {
         // Get Tokens from Twitch
-        try {
+        Log.w("Token", "entering gettokens")
+        Log.w("Token", "value of httpClient is" + httpClient.toString() )
             val response = httpClient.post<OAuthTokensResponse>(Endpoints.tokenUrl) {
                 parameter("client_id", OAuthConstants.clientID)
                 parameter("client_secret", OAuthConstants.clientSecret)
@@ -26,12 +27,9 @@ class TwitchAuthenticationService(
                 parameter("grant_type", "authorization_code")
                 parameter("redirect_uri", OAuthConstants.redirectUri)
             }
-
+        Log.w("Token", "response is $response")
             Log.w("Token", "Getting tokens Access:" + response.accessToken + " and Refresh: " + response.refreshToken)
             return response
-        }  catch (t: Throwable) {
-            Log.w(TAG, "Error Getting Access token", t)
-            return null
-        }
+
     }
 }
