@@ -14,22 +14,23 @@ class OAuthViewModel(
     // Live Data
     val isLoginSuccess = MutableLiveData<Boolean>()
 
-    init {
-        getIsLoginSuccess()
-    }
+    //init {
+        //getIsLoginSuccess()
+    //}
 
     fun login(authorizationCode : String){
         viewModelScope.launch {
             Log.w("TAG", "starting login in viewmodel")
             auth_repository.login(authorizationCode)
+            isLoginSuccess.postValue(auth_repository.isLoginSuccess())
             Log.w("TAG", "finishin login in viewmodel")
         }
     }
 
-    private fun getIsLoginSuccess() {
+    //private fun getIsLoginSuccess() {
         // Get Availability from Repository and post result
-        viewModelScope.launch {
-            isLoginSuccess.postValue(auth_repository.isLoginSuccess())
-        }
-    }
+      //  viewModelScope.launch {
+
+     //   }
+    //}
 }

@@ -40,7 +40,7 @@ class OAuthActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_oauth)
-        initObservers()
+
         launchOAuthAuthorization()
     }
 
@@ -134,6 +134,7 @@ class OAuthActivity : AppCompatActivity() {
             try {
                 Log.w(TAG, "entering logins")
                 viewModel.login(authorizationCode)
+                initObservers()
                 Log.w(TAG, "out of  logins")
                 // Hide Loading Indicator
                // progressBar.visibility = View.GONE

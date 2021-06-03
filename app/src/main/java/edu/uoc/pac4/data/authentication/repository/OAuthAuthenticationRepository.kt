@@ -39,7 +39,7 @@ class OAuthAuthenticationRepository(
     }
 
     override suspend fun isLoginSuccess(): Boolean {
-        // Check user is available locally
+        // Check if tokens are not null
         return (sessionManager.getAccessToken() != null && sessionManager.getRefreshToken() != null)
     }
 }
