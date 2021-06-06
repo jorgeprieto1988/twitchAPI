@@ -2,7 +2,7 @@
     "tests": [{
       "name": "Stream Test",
       "setup": "",
-      "run": "./gradlew testDebugUnitTest --tests edu.uoc.pac4.StreamTest",
+      "run": "./gradlew test",
       "input": "",
       "output": "",
       "comparison": "included",
