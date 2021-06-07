@@ -42,6 +42,7 @@ class StreamsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_streams)
         // Init RecyclerView
         initRecyclerView()
+        initObservers()
         // Swipe to Refresh Listener
         swipeRefreshLayout.setOnRefreshListener {
             lifecycleScope.launch {
@@ -75,6 +76,20 @@ class StreamsActivity : AppCompatActivity() {
         })
     }
 
+    private fun initObservers() {
+        viewModel.getCursor().observe(this) {
+            // Call a method when a new value is emitted
+            onNewCursor(it)
+        }
+        viewModel.getSavedStreams().observe(this, Observer { streams ->
+            streams?.let { adapter.submitList(it) }
+        })
+    }
+
+    private fun onNewCursor(newCursor: String?) {
+        nextCursor = newCursor
+    }
+
     private var nextCursor: String? = null
     private fun getStreams(cursor: String? = null) {
         Log.d(TAG, "Requesting streams with cursor $cursor")
@@ -85,26 +100,10 @@ class StreamsActivity : AppCompatActivity() {
         // Get Twitch Streams
 
             try {
-                viewModel.getSavedStreams().observe(this, Observer { streams ->
-                    streams?.let { adapter.submitList(it) }
-                })
-               // val database = Room.databaseBuilder(applicationContext,
-                //    ApplicationDatabase::class.java, "app_database").build()
-                //val streamslocal = StreamsLocal(database.streamDao())
-               // val streamsremote = StreamsRemote(Network.createHttpClient(this@StreamsActivity, OAuthConstants.clientID, OAuthConstants.clientSecret))
-              //  val streams = TwitchStreamsRepository(streamsremote,streamslocal)
-              //  val listStreams = streams.getStreams(cursor)
-              //  Log.w(TAG, "streams are "+ listStreams.toString())
-
-              //  listStreams.collect(){collectedStreams ->
-                 //   if (cursor != null) {
-                 //   adapter.submitList(adapter.currentList.plus(collectedStreams.second))
-                 //   } else {
-                   //     Log.w(TAG, "first streams "+ collectedStreams.second.toString())
-                  //      // It's the first n items, no pagination yet
-                  //      adapter.submitList(collectedStreams.second)
-                  //  }
-               // }
+                //viewModel.getSavedStreams().observe(this, Observer { streams ->
+                //    streams?.let { adapter.submitList(it) }
+                //})
+                viewModel.getStreams(nextCursor)
                 // Hide Loading
                 swipeRefreshLayout.isRefreshing = false
 
