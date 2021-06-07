@@ -35,7 +35,7 @@ class StreamsViewModel(private val repository: StreamsRepository) : ViewModel() 
             listStreams.collect(){collectedStreams ->
                 if (cursor != null) {
                     streams.postValue(streams.value?.plus(collectedStreams.second))
-                    nextCursor.postValue(null)
+
                 } else {
 
                     // It's the first n items, no pagination yet
