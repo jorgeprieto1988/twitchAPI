@@ -42,4 +42,14 @@ class OAuthAuthenticationRepository(
         // Check if tokens are not null
         return (sessionManager.getAccessToken() != null && sessionManager.getRefreshToken() != null)
     }
+
+    override suspend fun clearAccessToken() {
+        // Clear local tokens
+        sessionManager.clearAccessToken()
+    }
+
+    override suspend fun clearRefreshToken() {
+        // Clear local tokens
+        sessionManager.clearRefreshToken()
+    }
 }

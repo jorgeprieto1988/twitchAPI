@@ -119,7 +119,8 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun onUnauthorized() {
         // Clear local access token
-        SessionManager(this).clearAccessToken()
+        //SessionManager(this).clearAccessToken()
+        viewModel.clearAccessToken()
         // User was logged out, close screen and all parent screens and open login
         finishAffinity()
         startActivity(Intent(this, LoginActivity::class.java))

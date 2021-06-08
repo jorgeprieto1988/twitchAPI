@@ -19,22 +19,28 @@ class TwitchStreamsRepository(
 
     override suspend fun getStreams(cursor: String?): Flow<Pair<String?, List<Stream>>> {
         return flow {
+            var listStream: List<Stream>
+            var listStreamTwitch: List<Stream>
+            var pair: Pair<String?, List<Stream>>
             //Get streams from local
-            var listStream: List<Stream> = streamsLocal.getStreamsLocal()
-            Log.w("Streams", "List of liststream is " + listStream.toString())
-            //Emit local streams
-            var pair : Pair<String?, List<Stream>> = Pair(null,listStream)
-            emit(pair)
+            if(cursor == null) {
+                listStream = streamsLocal.getStreamsLocal()
+                Log.w("Streams", "List of liststream is " + listStream.toString())
+                //Emit local streams
+                pair = Pair(null, listStream)
+                emit(pair)
+            }
             //Get streams from Twitch
             val streams = streamsRemote.getStreamsTwitch(cursor)
             //Save streams from Twitch
             val pagination = streams?.pagination?.cursor
             streams?.data?.let { streamsLocal.saveStreams(it) }
+            listStreamTwitch = streams?.data!!
             //Merge streams from local and twitch
-            listStream = streamsLocal.getStreamsLocal()
-            Log.w("Streams", "List of liststream is $listStream")
+            //listStream = streamsLocal.getStreamsLocal()
+            Log.w("Streams", "List of liststream is $listStreamTwitch")
             //Emit streams again
-            pair = Pair(pagination ,listStream)
+            pair = Pair(pagination ,listStreamTwitch)
             emit(pair)
         }
 

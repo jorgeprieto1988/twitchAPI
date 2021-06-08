@@ -45,4 +45,10 @@ class ProfileViewModel(
         }
     }
 
+    fun clearAccessToken(){
+        viewModelScope.launch {
+            auth_repository.clearAccessToken()
+        }
+    }
+
 }
