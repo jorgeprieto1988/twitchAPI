@@ -11,7 +11,7 @@ class StreamsRemote(private val httpClient: HttpClient) {
 
     /// Gets Streams on Twitch
     suspend fun getStreamsTwitch(cursor: String? = null): StreamsResponse? {
-        Log.w("Remote", "getting streams remote")
+        Log.w("Remote", "STARTING streams remote")
         Log.w("Remote", "Cursor in is "+ cursor)
         // TODO("Get Streams from Twitch")
         //val response : StreamsResponse
@@ -31,6 +31,7 @@ class StreamsRemote(private val httpClient: HttpClient) {
             Log.w("Remote", "Data: ${response.data}")
             Log.v("Streams", "Cursor: ${response.pagination?.cursor}")
             Log.w("Remote", "Cursor: ${response.pagination?.cursor}")
+            Log.w("Remote", "ENDING streams remote")
             return response
         }
         catch(e: Exception){

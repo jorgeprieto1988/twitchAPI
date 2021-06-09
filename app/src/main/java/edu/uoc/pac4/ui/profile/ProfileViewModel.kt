@@ -18,7 +18,7 @@ class ProfileViewModel(
     private val user = MutableLiveData<User>()
 
     init{
-        getUserTwitch()
+        getUserTwitch(null)
         //viewModelScope.launch {
         //    repository.getUser()?.description?.let { updateUserTwitch(it) }
        // }
@@ -26,10 +26,17 @@ class ProfileViewModel(
 
     fun getSavedUser() = user
 
-    private fun getUserTwitch(){
-
-        viewModelScope.launch{
-            user.postValue(user_repository.getUser())
+    private fun getUserTwitch(description: String?){
+        if(description == null) {
+            viewModelScope.launch {
+                user.postValue(user_repository.getUser())
+            }
+        }
+        else
+        {
+            viewModelScope.launch{
+                user.postValue(user_repository.updateUser(description))
+            }
         }
     }
 

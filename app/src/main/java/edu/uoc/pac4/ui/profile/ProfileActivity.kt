@@ -38,11 +38,12 @@ class ProfileActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
+        initObservers()
         // Get User Profile
-        lifecycleScope.launch {
+        //lifecycleScope.launch {
 
-            getUserProfile()
-        }
+          //  getUserProfile()
+       // }
         // Update Description Button Listener
         updateDescriptionButton.setOnClickListener {
             // Hide Keyboard
@@ -63,6 +64,10 @@ class ProfileActivity : AppCompatActivity() {
 
             logout()
         }
+    }
+
+    private fun initObservers() {
+        getUserProfile()
     }
 
     private  fun getUserProfile() {

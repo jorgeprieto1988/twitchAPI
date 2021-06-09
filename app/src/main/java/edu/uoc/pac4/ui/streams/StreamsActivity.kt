@@ -44,15 +44,15 @@ class StreamsActivity : AppCompatActivity() {
         initRecyclerView()
         initObservers()
         // Swipe to Refresh Listener
-        swipeRefreshLayout.setOnRefreshListener {
-            lifecycleScope.launch {
-                getStreams()
-            }
-        }
-        lifecycleScope.launch {
+        //swipeRefreshLayout.setOnRefreshListener {
+          //  lifecycleScope.launch {
+          //      getStreams()
+         //   }
+       // }
+        //lifecycleScope.launch {
             // Get Streams
-            getStreams()
-        }
+          //  getStreams()
+       // }
     }
 
     private fun initRecyclerView() {
@@ -63,6 +63,7 @@ class StreamsActivity : AppCompatActivity() {
         // Set Pagination Listener
         recyclerView.addOnScrollListener(object : PaginationScrollListener(layoutManager) {
             override fun loadMoreItems() {
+                Log.w(TAG, "Calling from recyclerView!!! viewModel.getStreams....")
                 getStreams(nextCursor)
             }
 
@@ -103,7 +104,9 @@ class StreamsActivity : AppCompatActivity() {
                 //viewModel.getSavedStreams().observe(this, Observer { streams ->
                 //    streams?.let { adapter.submitList(it) }
                 //})
+                Log.w(TAG, "Calling viewModel.getStreams....")
                 viewModel.getStreams(nextCursor)
+                Log.w(TAG, "Ending viewModel.getStreams....")
                 // Hide Loading
                 swipeRefreshLayout.isRefreshing = false
 
