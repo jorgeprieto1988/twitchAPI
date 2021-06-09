@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View.GONE
 import android.view.View.VISIBLE
@@ -51,10 +52,11 @@ class ProfileActivity : AppCompatActivity() {
             imm?.hideSoftInputFromWindow(it.windowToken, 0)
             // Update User Description
             //lifecycleScope.launch {
-                viewModel.getSavedUser().observe(this, Observer {
-                    lifecycleScope.launch {
-                    updateUserDescription(userDescriptionEditText.text?.toString() ?: "")}
-                })
+                //viewModel.getSavedUser().observe(this, Observer {
+                  //  lifecycleScope.launch {
+                    updateUserDescription(userDescriptionEditText.text?.toString() ?: "")
+                    //}
+               // })
                // updateUserDescription(userDescriptionEditText.text?.toString() ?: "")
            // }
         }
@@ -86,14 +88,16 @@ class ProfileActivity : AppCompatActivity() {
     }
 
 
-    private suspend fun updateUserDescription(description: String) {
+    private fun updateUserDescription(description: String) {
         progressBar.visibility = VISIBLE
         // Update the Twitch User Description using the API
         try {
+            Log.w("User", "Calling updateuser")
             viewModel.updateUserTwitch(description)
             // Hide Loading
             progressBar.visibility = GONE
         } catch (t: OAuthException.Unauthorized) {
+            Log.w("User", "catching error")
             onUnauthorized()
         }
     }
