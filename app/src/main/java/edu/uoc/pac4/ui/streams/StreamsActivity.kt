@@ -72,6 +72,7 @@ class StreamsActivity : AppCompatActivity() {
             }
 
             override fun isLoading(): Boolean {
+                Log.w("Refreshing", "Value of refreshing is..."  + swipeRefreshLayout.isRefreshing.toString())
                 return swipeRefreshLayout.isRefreshing
             }
         })
@@ -84,6 +85,10 @@ class StreamsActivity : AppCompatActivity() {
         }
         viewModel.getSavedStreams().observe(this, Observer { streams ->
             streams?.let { adapter.submitList(it) }
+        })
+
+        viewModel.getIsLoading().observe(this, Observer { loading ->
+            swipeRefreshLayout.isRefreshing = loading
         })
     }
 
