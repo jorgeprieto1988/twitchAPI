@@ -16,15 +16,21 @@ class ProfileViewModel(
 
     // Live Data
     private val user = MutableLiveData<User>()
+    private val isLogOut = MutableLiveData<Boolean>()
+    private val isTokenCleared = MutableLiveData<Boolean>()
 
     init{
         getUserTwitch(null)
         //viewModelScope.launch {
         //    repository.getUser()?.description?.let { updateUserTwitch(it) }
        // }
+        isLogOut.postValue(false)
+        isTokenCleared.postValue(false)
     }
 
     fun getSavedUser() = user
+    fun getIsLogOut() = isLogOut
+    fun getIsTokenCleared() = isTokenCleared
 
     private fun getUserTwitch(description: String?){
         if(description == null) {
@@ -49,12 +55,14 @@ class ProfileViewModel(
     fun userLogOut(){
         viewModelScope.launch {
             auth_repository.logout()
+            isLogOut.postValue(true)
         }
     }
 
     fun clearAccessToken(){
         viewModelScope.launch {
             auth_repository.clearAccessToken()
+            isTokenCleared.postValue(true)
         }
     }
 

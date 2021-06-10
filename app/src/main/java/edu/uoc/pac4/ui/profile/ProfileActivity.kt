@@ -70,6 +70,22 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun initObservers() {
         getUserProfile()
+        viewModel.getIsLogOut().observe(this, Observer { logout ->
+            if(logout){
+                // Close this and all parent activities
+                finishAffinity()
+                // Open Login
+                startActivity(Intent(this, LoginActivity::class.java))
+            }
+        })
+
+        viewModel.getIsTokenCleared().observe(this, Observer { cleared ->
+            if(cleared){
+                // User was logged out, close screen and all parent screens and open login
+                finishAffinity()
+                startActivity(Intent(this, LoginActivity::class.java))
+            }
+        })
     }
 
     private  fun getUserProfile() {
@@ -120,19 +136,13 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun logout() {
         viewModel.userLogOut()
-        // Close this and all parent activities
-        finishAffinity()
-        // Open Login
-        startActivity(Intent(this, LoginActivity::class.java))
     }
 
     private fun onUnauthorized() {
         // Clear local access token
         //SessionManager(this).clearAccessToken()
         viewModel.clearAccessToken()
-        // User was logged out, close screen and all parent screens and open login
-        finishAffinity()
-        startActivity(Intent(this, LoginActivity::class.java))
+
     }
 
     private fun showError(text: String) {
