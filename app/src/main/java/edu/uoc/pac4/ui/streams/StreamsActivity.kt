@@ -43,16 +43,6 @@ class StreamsActivity : AppCompatActivity() {
         // Init RecyclerView
         initRecyclerView()
         initObservers()
-        // Swipe to Refresh Listener
-        //swipeRefreshLayout.setOnRefreshListener {
-          //  lifecycleScope.launch {
-          //      getStreams()
-         //   }
-       // }
-        //lifecycleScope.launch {
-            // Get Streams
-          //  getStreams()
-       // }
     }
 
     private fun initRecyclerView() {
@@ -90,6 +80,22 @@ class StreamsActivity : AppCompatActivity() {
         viewModel.getIsLoading().observe(this, Observer { loading ->
             swipeRefreshLayout.isRefreshing = loading
         })
+
+        viewModel.getErrorOauth().observe(this, Observer { error ->
+            if(error) {
+                finish()
+                startActivity(Intent(this@StreamsActivity, LoginActivity::class.java))
+            }
+        })
+
+        viewModel.getErrorThrow().observe(this, Observer { error ->
+            if(error){
+                Toast.makeText(
+                        this@StreamsActivity,
+                        getString(R.string.error_streams), Toast.LENGTH_SHORT
+                ).show()
+            }
+        })
     }
 
     private fun onNewCursor(newCursor: String?) {
@@ -98,39 +104,7 @@ class StreamsActivity : AppCompatActivity() {
 
     private var nextCursor: String? = null
     private fun getStreams(cursor: String? = null) {
-        Log.d(TAG, "Requesting streams with cursor $cursor")
-
-        // Show Loading
-        swipeRefreshLayout.isRefreshing = true
-
-        // Get Twitch Streams
-
-            try {
-                //viewModel.getSavedStreams().observe(this, Observer { streams ->
-                //    streams?.let { adapter.submitList(it) }
-                //})
-                Log.w(TAG, "Calling viewModel.getStreams....")
                 viewModel.getStreams(nextCursor)
-                Log.w(TAG, "Ending viewModel.getStreams....")
-                // Hide Loading
-                swipeRefreshLayout.isRefreshing = false
-
-            } catch (t: OAuthException.Unauthorized) {
-                Log.w(TAG, "Unauthorized Error getting streams", t)
-                // Clear local access token
-                SessionManager(this@StreamsActivity).clearAccessToken()
-                // User was logged out, close screen and open login
-                finish()
-                startActivity(Intent(this@StreamsActivity, LoginActivity::class.java))
-            } catch (t: Throwable) {
-                // We don't know why this happen, just show an error message
-                Log.w(TAG, "Unknown error getting streams", t)
-                Toast.makeText(
-                    this@StreamsActivity,
-                    getString(R.string.error_streams), Toast.LENGTH_SHORT
-                ).show()
-            }
-
     }
 
     // region Menu

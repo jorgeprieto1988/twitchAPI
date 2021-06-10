@@ -17,6 +17,6 @@ val uiModule = module {
     // LaunchViewModel
     viewModel { LaunchViewModel(repository = get()) }
     viewModel { ProfileViewModel(user_repository = get(), auth_repository = get()) }
-    viewModel { StreamsViewModel(repository = get()) }
+    viewModel { StreamsViewModel(repository = get(), auth_repository = get())}
     viewModel { OAuthViewModel(auth_repository = get()) }
 }
