@@ -61,6 +61,11 @@ class OAuthActivity : AppCompatActivity() {
         } else {
             Log.v("Token", "Login failed")
             // User not available, request Login
+            Toast.makeText(
+                    this@OAuthActivity,
+                    getString(R.string.error_oauth),
+                    Toast.LENGTH_LONG
+            ).show()
             startActivity(Intent(this@OAuthActivity, OAuthActivity::class.java))
         }
         finish()
@@ -127,36 +132,9 @@ class OAuthActivity : AppCompatActivity() {
 
         // Show Loading Indicator
         progressBar.visibility = View.VISIBLE
-
-        // If the Activity is closed, this Thread will be cancelled
-        lifecycleScope.launch {
-
-            try {
-                Log.w(TAG, "entering logins")
                 viewModel.login(authorizationCode)
                 initObservers()
                 Log.w(TAG, "out of  logins")
-                // Hide Loading Indicator
-               // progressBar.visibility = View.GONE
-                //Log.w(TAG, "starting activity launch")
-                // Restart app to navigate to StreamsActivity
-                //startActivity(Intent(this@OAuthActivity, LaunchActivity::class.java))
-                //finish()
-            }
-            catch(e :Error){
-                Log.w(TAG, "catching errors")
-                Toast.makeText(
-                    this@OAuthActivity,
-                    getString(R.string.error_oauth),
-                    Toast.LENGTH_LONG
-                ).show()
-                // Restart Activity
-                //finish()
-                //startActivity(Intent(this@OAuthActivity, OAuthActivity::class.java))
-            }
-       
-        }
-
 
     }
 }
